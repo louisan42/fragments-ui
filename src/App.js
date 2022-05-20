@@ -13,6 +13,10 @@ import "@aws-amplify/ui-react/styles.css";
 
 import { Amplify } from "aws-amplify";
 import { useEffect, useState } from "react";
+import { getUserFragments } from "./api";
+import PropTypes from "prop-types";
+
+// Configure our Auth object to use our Cognito User Pool
 Amplify.configure({
   Auth: {
     // Amazon Region
@@ -68,10 +72,13 @@ function App({ signOut }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    if (user === null) {
-      getUser().then((user) => {
-        setUser(user);
-      });
+    getUser().then(setUser);
+    console.log("i fire once");
+  }, []);
+
+  useEffect(() => {
+    if (user != null) {
+      getUserFragments(user);
     }
   });
 
@@ -87,7 +94,6 @@ function App({ signOut }) {
           <button onClick={signOut} className="signOut-button">
             Sign Out
           </button>
-          {console.log(user)}
         </div>
       ) : (
         <div style={{ position: "relative" }}>
@@ -95,21 +101,15 @@ function App({ signOut }) {
         </div>
       )}
     </>
-
-    // <Authenticator signUpAttributes={["email", "name"]} components={components}>
-    //   {({ signOut, user }) => (
-    //     <main>
-    //       <h1>Hello {user.username}</h1>
-    //       <button onClick={signOut}>Sign out</button>
-    //     </main>
-    //   )}
-    // </Authenticator>
   );
 }
+
+App.propTypes = {
+  user: PropTypes.object,
+};
 
 export default withAuthenticator(App, {
   signUpAttributes: ["email", "name"],
   components: components,
   variation: "default",
 });
-//export default App;
