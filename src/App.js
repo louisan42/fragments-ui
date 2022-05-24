@@ -44,7 +44,9 @@ function App({ signOut }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    getUser().then(setUser);
+    getUser().then((user) => {
+      setUser(user);
+    });
   }, []);
 
   useEffect(() => {
