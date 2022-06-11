@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { getUser, config } from "./auth";
 import {
@@ -6,15 +5,16 @@ import {
   useTheme,
   Image,
   View,
-  Heading,
   Loader,
+  Heading,
 } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 
 import { Amplify } from "aws-amplify";
 import { useEffect, useState } from "react";
-import { getUserFragments } from "./api";
+
 import PropTypes from "prop-types";
+import Home from "./components/Home";
 
 // Configure our Auth object to use our Cognito User Pool
 Amplify.configure(config);
@@ -32,6 +32,7 @@ const components = {
         <Heading
           padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
           level={3}
+          //style={{ color: #61DBFB }}
         >
           Fragment Microservice
         </Heading>
@@ -49,24 +50,11 @@ function App({ signOut }) {
     });
   }, []);
 
-  useEffect(() => {
-    if (user != null) {
-      getUserFragments(user);
-    }
-  });
-
   return (
     <>
       {user != null ? (
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h1>Fragments-UI</h1>
-          </header>
-          <h3>Hello {user.username} </h3>
-          <button onClick={signOut} className="signOut-button">
-            Sign Out
-          </button>
+        <div>
+          <Home user={user} signOut={signOut} />
         </div>
       ) : (
         <div style={{ position: "relative" }}>
