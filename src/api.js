@@ -47,8 +47,15 @@ export async function getExpandedFragments(user) {
   }
 }
 // GET /fragments/:id
+// https://github.com/humphd/cloud-computing-for-programmers-summer-2022/blob/main/assignments/README.md#45-get-fragmentsid
 export async function getFragmentDataByID(user, id) {
-  console.log("Requesting fragment metadata by id...");
+  console.log("Requesting fragment data by id...");
+  console.log(id);
+  if (id.id) {
+    id = id.id;
+    console.log(id);
+  }
+
   try {
     const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {
       // Generate headers with the proper Authorization bearer token to pass
@@ -57,10 +64,37 @@ export async function getFragmentDataByID(user, id) {
     if (!res.ok) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
-    const data = await res.json();
+    const data = await res.text();
     console.log("Got fragment data", { data });
+    return data;
   } catch (err) {
-    console.error("Unable to call POST /v1/fragments", { err });
+    console.error("Unable to call GET /v1/fragments/:id", { err });
+  }
+}
+
+// GET /fragments/:id/info
+// https://github.com/humphd/cloud-computing-for-programmers-summer-2022/blob/main/assignments/README.md#47-get-fragmentsidinfo
+export async function getMetadataByID(user, id) {
+  console.log("Requesting fragment metadata by id...");
+  console.log(id);
+  if (id.id) {
+    id = id.id;
+    console.log(id);
+  }
+
+  try {
+    const res = await fetch(`${apiUrl}/v1/fragments/${id}/info`, {
+      // Generate headers with the proper Authorization bearer token to pass
+      headers: user.authorizationHeaders(),
+    });
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
+    const data = await res.json();
+    console.log("Got fragment metadata", { data });
+    return data;
+  } catch (err) {
+    console.error("Unable to call GET /v1/fragments/:id/info", { err });
   }
 }
 
@@ -83,5 +117,32 @@ export async function postFragment(user, type, fData) {
     return data;
   } catch (err) {
     console.error("Unable to call POST /v1/fragment", { err });
+  }
+}
+
+// DELETE /fragments/:id
+// https://github.com/humphd/cloud-computing-for-programmers-summer-2022/blob/main/assignments/README.md#48-delete-fragmentsid
+export async function deleteFragmentByID(user, id) {
+  console.log("Requesting to delete fragment id...");
+  console.log(id);
+  if (id.id) {
+    id = id.id;
+    console.log(id);
+  }
+
+  try {
+    const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {
+      // Generate headers with the proper Authorization bearer token to pass
+      headers: user.authorizationHeaders(),
+      method: "DELETE",
+    });
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
+    const data = await res.json();
+    console.log("Got req response", { data });
+    return data;
+  } catch (err) {
+    console.error("Unable to call DELETE /v1/fragments/:id", { err });
   }
 }
