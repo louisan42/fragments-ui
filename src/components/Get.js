@@ -16,21 +16,29 @@ import {
   getMetadataByID,
   deleteFragmentByID,
 } from "../api";
+import Modal from "./Modal";
+import Put from "./Put";
 const Get = ({ user }) => {
   const [isChecked, setIsChecked] = useState(false);
   const [fragments, setFragments] = useState([]);
   const [viewBox, setViewBox] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [title, setTitle] = useState("Modal Title");
 
-  const handleGetData = async (user, fragment) => {
+  const handleGetData = async (user, fragment, title) => {
     const res = await getFragmentDataByID(user, fragment);
     if (res) {
       setViewBox(res);
+      setIsOpen(true);
+      setTitle(title);
     }
   };
-  const handleGetMetadata = async (user, fragment) => {
+  const handleGetMetadata = async (user, fragment, title) => {
     const res = await getMetadataByID(user, fragment);
     if (res) {
       setViewBox(JSON.stringify(res.fragment, null, 1));
+      setIsOpen(true);
+      setTitle(title);
     }
   };
   const handleDelete = async (user, fragment) => {
@@ -39,6 +47,13 @@ const Get = ({ user }) => {
     if (res.status === "ok") {
       setFragments(fragments.filter((f) => f !== fragment));
     }
+  };
+
+  const handleEdit = async (user, fragment, title) => {
+    fragment = fragment.id ? fragment.id : fragment;
+    setViewBox(<Put user={user} id={fragment} />);
+    setIsOpen(true);
+    setTitle(title);
   };
 
   useEffect(() => {
@@ -55,7 +70,7 @@ const Get = ({ user }) => {
         setFragments(res.fragments);
       });
     }
-  }, [user, isChecked]);
+  }, [isChecked]);
   return (
     <>
       <div className="action-landing">
@@ -72,58 +87,59 @@ const Get = ({ user }) => {
         <Divider size="small" />
         {fragments &&
           fragments.map((fragment, index) => (
-            <>
-              <Card variation="elevated" key={index}>
-                <div>
-                  <Badge borderRadius={"3px"}>
-                    {typeof fragment == "object"
-                      ? JSON.stringify(fragment, null, 1)
-                      : fragment}
-                  </Badge>
-                </div>
-                <div className="App-buttons">
-                  <Button
-                    size="small"
-                    color="white"
-                    variation="primary"
-                    onClick={() => handleGetData(user, fragment)}
-                  >
-                    <IconInfo />
-                    data
-                  </Button>
-                  <Button
-                    size="small"
-                    color="white"
-                    backgroundColor={"darkblue"}
-                    onClick={() => handleGetMetadata(user, fragment)}
-                  >
-                    <IconInfo />
-                    metadata
-                  </Button>
-                  <Button
-                    size="small"
-                    color="white"
-                    backgroundColor={"goldenrod"}
-                  >
-                    <IconEdit /> edit
-                  </Button>
-                  <Button
-                    size="small"
-                    backgroundColor={"darkRed"}
-                    color="white"
-                    onClick={() => handleDelete(user, fragment)}
-                  >
-                    <IconDelete /> delete
-                  </Button>
-                </div>
-              </Card>
-            </>
+            <Card variation="elevated" key={index}>
+              <div>
+                <Badge borderRadius={"3px"}>
+                  {typeof fragment == "object"
+                    ? JSON.stringify(fragment, null, 1)
+                    : fragment}
+                </Badge>
+              </div>
+              <div className="App-buttons">
+                <Button
+                  size="small"
+                  color="white"
+                  name="Data"
+                  variation="primary"
+                  onClick={(e) => handleGetData(user, fragment, e.target.name)}
+                >
+                  <IconInfo />
+                  data
+                </Button>
+                <Button
+                  size="small"
+                  color="white"
+                  name="Metadata"
+                  backgroundColor={"darkblue"}
+                  onClick={(e) =>
+                    handleGetMetadata(user, fragment, e.target.name)
+                  }
+                >
+                  <IconInfo />
+                  metadata
+                </Button>
+                <Button
+                  size="small"
+                  color="white"
+                  backgroundColor={"goldenrod"}
+                  name={`Edit Fragment ${fragment.id ? fragment.id : fragment}`}
+                  onClick={(e) => handleEdit(user, fragment, e.target.name)}
+                >
+                  <IconEdit /> edit
+                </Button>
+                <Button
+                  size="small"
+                  backgroundColor={"darkRed"}
+                  color="white"
+                  onClick={() => handleDelete(user, fragment)}
+                >
+                  <IconDelete /> delete
+                </Button>
+              </div>
+            </Card>
           ))}
       </div>
-      <p className="launch-label">Response</p>
-      <div className="action-landing" style={{ height: "15vh" }}>
-        {viewBox}
-      </div>
+      {isOpen && <Modal setIsOpen={setIsOpen} info={viewBox} title={title} />}
     </>
   );
 };
