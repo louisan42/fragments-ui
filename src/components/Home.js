@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@aws-amplify/ui-react";
 import Post from "./Post";
 import Get from "./Get";

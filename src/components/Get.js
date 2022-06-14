@@ -36,7 +36,11 @@ const Get = ({ user }) => {
   const handleGetMetadata = async (user, fragment, title) => {
     const res = await getMetadataByID(user, fragment);
     if (res) {
-      setViewBox(JSON.stringify(res.fragment, null, 1));
+      setViewBox(
+        <div>
+          <pre>{JSON.stringify(res.fragment, null, 2)}</pre>
+        </div>
+      );
       setIsOpen(true);
       setTitle(title);
     }
@@ -70,7 +74,7 @@ const Get = ({ user }) => {
         setFragments(res.fragments);
       });
     }
-  }, [isChecked]);
+  }, [isChecked, user]);
   return (
     <>
       <div className="action-landing">
@@ -89,10 +93,12 @@ const Get = ({ user }) => {
           fragments.map((fragment, index) => (
             <Card variation="elevated" key={index}>
               <div>
-                <Badge borderRadius={"3px"}>
-                  {typeof fragment == "object"
-                    ? JSON.stringify(fragment, null, 1)
-                    : fragment}
+                <Badge borderRadius={"3px"} textAlign={"left"}>
+                  {typeof fragment == "object" ? (
+                    <pre>{JSON.stringify(fragment, null, 2)}</pre>
+                  ) : (
+                    fragment
+                  )}
                 </Badge>
               </div>
               <div className="App-buttons">

@@ -32,7 +32,7 @@ const components = {
         <Heading
           padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
           level={3}
-          //style={{ color: #61DBFB }}
+          color={tokens.colors.primary}
         >
           Fragment Microservice
         </Heading>
