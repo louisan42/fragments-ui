@@ -8,6 +8,7 @@ const EntryForm = ({ user, action }) => {
   const [text, setText] = useState('');
   const [contentType, setContentType] = useState('');
   const [hasError, setHasError] = useState({ type: false, text: false });
+  const [errorMessage, setErrorMessage] = useState('input cannot be empty');
   const [message, setMessage] = useState('');
 
   const wait = async (ms = 2000) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -16,15 +17,34 @@ const EntryForm = ({ user, action }) => {
     const localUser = user.user ? user.user : user;
     const localId = user.id ? user.id : null;
     if (text && contentType) {
-      const res = await action(localUser, contentType, text, localId);
-      if (res) {
-        setContentType('');
-        setText('');
-        setHasError({ type: false, text: false });
+      if (contentType === 'application/json') {
+        try {
+          JSON.parse(text);
+          const res = await action(localUser, contentType, text, localId);
+          if (res) {
+            setContentType('');
+            setText('');
+            setHasError({ type: false, text: false });
 
-        setMessage('Fragment posted successfully');
-        await wait();
-        setMessage('');
+            setMessage('Fragment posted successfully');
+            await wait();
+            setMessage('');
+          }
+        } catch (error) {
+          setHasError({ type: false, text: true });
+          setErrorMessage('Invalid syntax input');
+        }
+      } else {
+        const res = await action(localUser, contentType, text, localId);
+        if (res) {
+          setContentType('');
+          setText('');
+          setHasError({ type: false, text: false });
+
+          setMessage('Fragment posted successfully');
+          await wait();
+          setMessage('');
+        }
       }
     }
   };
@@ -55,6 +75,9 @@ const EntryForm = ({ user, action }) => {
       >
         <option value="">select your content type</option>
         <option value="text/plain">text/plain</option>
+        <option value="text/markdown">text/markdown</option>
+        <option value="text/plain; charset=utf-8">text/plain; charset=utf-8</option>
+        <option value="application/json">application/json</option>
       </SelectField>
       {contentType === 'text/plain' && (
         <TextAreaField
@@ -64,6 +87,28 @@ const EntryForm = ({ user, action }) => {
           resize="vertical"
           hasError={hasError.text}
           errorMessage={'Text cannot be empty'}
+          onChange={(e) => setText(e.target.value)}
+        />
+      )}
+      {contentType === 'text/markdown' && (
+        <TextAreaField
+          label="Markdown"
+          placeholder="This is a Markdown fragment input"
+          descriptiveText="Please enter your content"
+          resize="vertical"
+          hasError={hasError.text}
+          errorMessage={'Input cannot be empty'}
+          onChange={(e) => setText(e.target.value)}
+        />
+      )}
+      {contentType === 'application/json' && (
+        <TextAreaField
+          label="JSON"
+          placeholder="This is a JSON fragment input"
+          descriptiveText="Please enter your content"
+          resize="vertical"
+          hasError={hasError.text}
+          errorMessage={errorMessage}
           onChange={(e) => setText(e.target.value)}
         />
       )}

@@ -44,14 +44,21 @@ COPY --chown=node:node --from=dependencies /app /app
 # Copy src code into image
 COPY --chown=node:node ./src ./src
 
+#COPY --chown=node:node env.js ./
+
+# Copy public folder into image
+COPY --chown=node:node ./public ./public 
+
 # Build app
 RUN npm run build
+
+ENTRYPOINT npx react-inject-env set && npx http-server build
 ######################################################################################
 
 #Stage 2: Run the application on nginx web server
 FROM nginx:stable-alpine@sha256:0a88a14a264f46562e2d1f318fbf0606bc87e72727528b51613a5e96f483a0f6 AS deploy
 
-COPY --chown=node:node --from=builder /app/dist /user/share/nginx/html/
+COPY --chown=nginx:nginx --from=builder /app/build /usr/share/nginx/html/
 
 # Install curl
 RUN apk --no-cache add curl=7.83.1-r2
