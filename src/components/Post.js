@@ -1,6 +1,7 @@
-import { postFragment } from "../api";
-
-import EntryForm from "./EntryForm";
+import { postFragment } from '../api';
+import React from 'react';
+import EntryForm from './EntryForm';
+import PropTypes from 'prop-types';
 
 const Post = ({ user }) => {
   return (
@@ -10,5 +11,8 @@ const Post = ({ user }) => {
       <EntryForm action={postFragment} user={user} />
     </div>
   );
+};
+Post.propTypes = {
+  user: PropTypes.object,
 };
 export default Post;

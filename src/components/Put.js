@@ -1,6 +1,7 @@
-import { updateFragment } from "../api";
-
-import EntryForm from "./EntryForm";
+import { updateFragment } from '../api';
+import React from 'react';
+import EntryForm from './EntryForm';
+import PropTypes from 'prop-types';
 
 const Put = ({ user, id }) => {
   return (
@@ -10,5 +11,10 @@ const Put = ({ user, id }) => {
       <EntryForm action={updateFragment} user={{ user: user, id: id }} />
     </div>
   );
+};
+
+Put.propTypes = {
+  user: PropTypes.object,
+  id: PropTypes.string,
 };
 export default Put;

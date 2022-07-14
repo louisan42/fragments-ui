@@ -1,3 +1,6 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
 import {
   SwitchField,
   Divider,
@@ -7,23 +10,23 @@ import {
   IconDelete,
   IconEdit,
   Badge,
-} from "@aws-amplify/ui-react";
-import { useState, useEffect } from "react";
+} from '@aws-amplify/ui-react';
+import { useState, useEffect } from 'react';
 import {
   getUserFragments,
   getExpandedFragments,
   getFragmentDataByID,
   getMetadataByID,
   deleteFragmentByID,
-} from "../api";
-import Modal from "./Modal";
-import Put from "./Put";
+} from '../api';
+import Modal from './Modal';
+import Put from './Put';
 const Get = ({ user }) => {
   const [isChecked, setIsChecked] = useState(false);
   const [fragments, setFragments] = useState([]);
   const [viewBox, setViewBox] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [title, setTitle] = useState("Modal Title");
+  const [title, setTitle] = useState('Modal Title');
 
   const handleGetData = async (user, fragment, title) => {
     const res = await getFragmentDataByID(user, fragment);
@@ -48,7 +51,7 @@ const Get = ({ user }) => {
   const handleDelete = async (user, fragment) => {
     const res = await deleteFragmentByID(user, fragment);
     console.log(res.status);
-    if (res.status === "ok") {
+    if (res.status === 'ok') {
       setFragments(fragments.filter((f) => f !== fragment));
     }
   };
@@ -93,8 +96,8 @@ const Get = ({ user }) => {
           fragments.map((fragment, index) => (
             <Card variation="elevated" key={index}>
               <div>
-                <Badge borderRadius={"3px"} textAlign={"left"}>
-                  {typeof fragment == "object" ? (
+                <Badge borderRadius={'3px'} textAlign={'left'}>
+                  {typeof fragment == 'object' ? (
                     <pre>{JSON.stringify(fragment, null, 2)}</pre>
                   ) : (
                     fragment
@@ -116,10 +119,8 @@ const Get = ({ user }) => {
                   size="small"
                   color="white"
                   name="Metadata"
-                  backgroundColor={"darkblue"}
-                  onClick={(e) =>
-                    handleGetMetadata(user, fragment, e.target.name)
-                  }
+                  backgroundColor={'darkblue'}
+                  onClick={(e) => handleGetMetadata(user, fragment, e.target.name)}
                 >
                   <IconInfo />
                   metadata
@@ -127,7 +128,7 @@ const Get = ({ user }) => {
                 <Button
                   size="small"
                   color="white"
-                  backgroundColor={"goldenrod"}
+                  backgroundColor={'goldenrod'}
                   name={`Edit Fragment ${fragment.id ? fragment.id : fragment}`}
                   onClick={(e) => handleEdit(user, fragment, e.target.name)}
                 >
@@ -135,7 +136,7 @@ const Get = ({ user }) => {
                 </Button>
                 <Button
                   size="small"
-                  backgroundColor={"darkRed"}
+                  backgroundColor={'darkRed'}
                   color="white"
                   onClick={() => handleDelete(user, fragment)}
                 >
@@ -149,4 +150,8 @@ const Get = ({ user }) => {
     </>
   );
 };
+Get.propTypes = {
+  user: PropTypes.object,
+};
+
 export default Get;

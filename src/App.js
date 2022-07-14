@@ -1,20 +1,14 @@
-import "./App.css";
-import { getUser, config } from "./auth";
-import {
-  withAuthenticator,
-  useTheme,
-  Image,
-  View,
-  Loader,
-  Heading,
-} from "@aws-amplify/ui-react";
-import "@aws-amplify/ui-react/styles.css";
+import React from 'react';
+import './App.css';
+import { getUser, config } from './auth';
+import { withAuthenticator, useTheme, Image, View, Loader, Heading } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
 
-import { Amplify } from "aws-amplify";
-import { useEffect, useState } from "react";
+import { Amplify } from 'aws-amplify';
+import { useEffect, useState } from 'react';
 
-import PropTypes from "prop-types";
-import Home from "./components/Home";
+import PropTypes from 'prop-types';
+import Home from './components/Home';
 
 // Configure our Auth object to use our Cognito User Pool
 Amplify.configure(config);
@@ -25,10 +19,7 @@ const components = {
 
     return (
       <View textAlign="center" padding={tokens.space.large}>
-        <Image
-          alt="Amplify logo"
-          src="https://docs.amplify.aws/assets/logo-dark.svg"
-        />
+        <Image alt="Amplify logo" src="https://docs.amplify.aws/assets/logo-dark.svg" />
         <Heading
           padding={`${tokens.space.xl} 0 0 ${tokens.space.xl}`}
           level={3}
@@ -57,7 +48,7 @@ function App({ signOut }) {
           <Home user={user} signOut={signOut} />
         </div>
       ) : (
-        <div style={{ position: "relative" }}>
+        <div style={{ position: 'relative' }}>
           <Loader variation="linear" className="abs-center" />
         </div>
       )}
@@ -67,10 +58,11 @@ function App({ signOut }) {
 
 App.propTypes = {
   user: PropTypes.object,
+  signOut: PropTypes.func,
 };
 
 export default withAuthenticator(App, {
-  signUpAttributes: ["email", "name"],
+  signUpAttributes: ['email', 'name'],
   components: components,
-  variation: "default",
+  variation: 'default',
 });
