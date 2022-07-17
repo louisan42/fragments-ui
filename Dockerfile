@@ -25,7 +25,7 @@ ENV NODE_ENV=production
 WORKDIR /app
 
 # Copy the package.json and package-lock.json files to /app
-COPY --chown=node:node package.json package-lock.json ./
+COPY --chown=node:node package.json package-lock.json .env ./
 
   
 # Install node dependencies defined in package-lock.json
@@ -44,7 +44,6 @@ COPY --chown=node:node --from=dependencies /app /app
 # Copy src code into image
 COPY --chown=node:node ./src ./src
 
-#COPY --chown=node:node env.js ./
 
 # Copy public folder into image
 COPY --chown=node:node ./public ./public 
@@ -52,7 +51,6 @@ COPY --chown=node:node ./public ./public
 # Build app
 RUN npm run build
 
-ENTRYPOINT npx react-inject-env set && npx http-server build
 ######################################################################################
 
 #Stage 2: Run the application on nginx web server

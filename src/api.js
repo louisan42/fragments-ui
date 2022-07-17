@@ -1,7 +1,7 @@
 // src/api.js
 
 // fragments microservice API, defaults to localhost:8080
-const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8080";
+const apiUrl = process.env.REACT_APP_API_URL; //|| "http://localhost:8080";
 
 /**
  * Given an authenticated user, request all fragments for this user from the
@@ -9,7 +9,7 @@ const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8080";
  * to have an `idToken` attached, so we can send that along with the request.
  */
 export async function getUserFragments(user) {
-  console.log("Requesting user fragments data...");
+  console.log('Requesting user fragments data...');
   try {
     const res = await fetch(`${apiUrl}/v1/fragments`, {
       // Generate headers with the proper Authorization bearer token to pass
@@ -19,10 +19,10 @@ export async function getUserFragments(user) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
     const data = await res.json();
-    console.log("Got user fragments data", { data });
+    console.log('Got user fragments data', { data });
     return data;
   } catch (err) {
-    console.error("Unable to call GET /v1/fragment", { err });
+    console.error('Unable to call GET /v1/fragment', { err });
   }
 }
 
@@ -30,7 +30,7 @@ export async function getUserFragments(user) {
 // https://github.com/humphd/cloud-computing-for-programmers-summer-2022/blob/main/assignments/README.md#441-get-fragmentsexpand1
 
 export async function getExpandedFragments(user) {
-  console.log("Requesting user expanded fragments...");
+  console.log('Requesting user expanded fragments...');
   try {
     const res = await fetch(`${apiUrl}/v1/fragments/?expand=1`, {
       // Generate headers with the proper Authorization bearer token to pass
@@ -40,16 +40,16 @@ export async function getExpandedFragments(user) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
     const data = await res.json();
-    console.log("Got user expanded fragments", { data });
+    console.log('Got user expanded fragments', { data });
     return data;
   } catch (err) {
-    console.error("Unable to call GET /v1/fragment/?expand=1", { err });
+    console.error('Unable to call GET /v1/fragment/?expand=1', { err });
   }
 }
 // GET /fragments/:id
 // https://github.com/humphd/cloud-computing-for-programmers-summer-2022/blob/main/assignments/README.md#45-get-fragmentsid
 export async function getFragmentDataByID(user, id) {
-  console.log("Requesting fragment data by id...");
+  console.log('Requesting fragment data by id...');
   console.log(id);
   if (id.id) {
     id = id.id;
@@ -65,17 +65,17 @@ export async function getFragmentDataByID(user, id) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
     const data = await res.text();
-    console.log("Got fragment data", { data });
+    console.log('Got fragment data', { data });
     return data;
   } catch (err) {
-    console.error("Unable to call GET /v1/fragments/:id", { err });
+    console.error('Unable to call GET /v1/fragments/:id', { err });
   }
 }
 
 // GET /fragments/:id/info
 // https://github.com/humphd/cloud-computing-for-programmers-summer-2022/blob/main/assignments/README.md#47-get-fragmentsidinfo
 export async function getMetadataByID(user, id) {
-  console.log("Requesting fragment metadata by id...");
+  console.log('Requesting fragment metadata by id...');
   console.log(id);
   if (id.id) {
     id = id.id;
@@ -91,39 +91,39 @@ export async function getMetadataByID(user, id) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
     const data = await res.json();
-    console.log("Got fragment metadata", { data });
+    console.log('Got fragment metadata', { data });
     return data;
   } catch (err) {
-    console.error("Unable to call GET /v1/fragments/:id/info", { err });
+    console.error('Unable to call GET /v1/fragments/:id/info', { err });
   }
 }
 
 // POST /fragments
 // https://github.com/humphd/cloud-computing-for-programmers-summer-2022/blob/main/assignments/README.md#43-post-fragments
 export async function postFragment(user, type, fData) {
-  console.log("Posting fragment...");
+  console.log('Posting fragment...');
   try {
     const res = await fetch(`${apiUrl}/v1/fragments`, {
       // Generate headers with the proper Authorization bearer token to pass
       headers: user.authorizationHeaders(type),
-      method: "POST",
+      method: 'POST',
       body: fData,
     });
     if (!res.ok) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
     const data = await res.json();
-    console.log("Got fragment data", { data });
+    console.log('Got fragment data', { data });
     return data;
   } catch (err) {
-    console.error("Unable to call POST /v1/fragment", { err });
+    console.error('Unable to call POST /v1/fragment', { err });
   }
 }
 
 // DELETE /fragments/:id
 // https://github.com/humphd/cloud-computing-for-programmers-summer-2022/blob/main/assignments/README.md#48-delete-fragmentsid
 export async function deleteFragmentByID(user, id) {
-  console.log("Requesting to delete fragment id...");
+  console.log('Requesting to delete fragment id...');
   console.log(id);
   if (id.id) {
     id = id.id;
@@ -134,16 +134,16 @@ export async function deleteFragmentByID(user, id) {
     const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {
       // Generate headers with the proper Authorization bearer token to pass
       headers: user.authorizationHeaders(),
-      method: "DELETE",
+      method: 'DELETE',
     });
     if (!res.ok) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
     const data = await res.json();
-    console.log("Got req response", { data });
+    console.log('Got req response', { data });
     return data;
   } catch (err) {
-    console.error("Unable to call DELETE /v1/fragments/:id", { err });
+    console.error('Unable to call DELETE /v1/fragments/:id', { err });
   }
 }
 
@@ -151,21 +151,21 @@ export async function deleteFragmentByID(user, id) {
 // https://github.com/humphd/cloud-computing-for-programmers-summer-2022/blob/main/assignments/README.md#46-put-fragmentsid
 
 export async function updateFragment(user, type, fData, id) {
-  console.log("Updating fragment...");
+  console.log('Updating fragment...');
   try {
     const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {
       // Generate headers with the proper Authorization bearer token to pass
       headers: user.authorizationHeaders(type),
-      method: "PUT",
+      method: 'PUT',
       body: fData,
     });
     if (!res.ok) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
     const data = await res.json();
-    console.log("Got fragment updated data", { data });
+    console.log('Got fragment updated data', { data });
     return data;
   } catch (err) {
-    console.error("Unable to call PUT /v1/fragment/:id", { err });
+    console.error('Unable to call PUT /v1/fragment/:id', { err });
   }
 }
