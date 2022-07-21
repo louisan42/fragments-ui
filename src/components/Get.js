@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import parse from 'html-react-parser';
 
 import {
   SwitchField,
@@ -31,7 +32,7 @@ const Get = ({ user }) => {
   const handleGetData = async (user, fragment, title) => {
     const res = await getFragmentDataByID(user, fragment);
     if (res) {
-      setViewBox(res);
+      setViewBox(parse(res));
       setIsOpen(true);
       setTitle(title);
     }

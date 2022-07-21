@@ -11,41 +11,34 @@ const EntryForm = ({ user, action }) => {
   const [errorMessage, setErrorMessage] = useState('input cannot be empty');
   const [message, setMessage] = useState('');
 
-  const wait = async (ms = 2000) => new Promise((resolve) => setTimeout(resolve, ms));
+  const wait = async (ms = 5000) => new Promise((resolve) => setTimeout(resolve, ms));
   const handleSubmit = async (e) => {
     e.preventDefault();
     const localUser = user.user ? user.user : user;
     const localId = user.id ? user.id : null;
     if (text && contentType) {
+      let res;
       if (contentType === 'application/json') {
         try {
           JSON.parse(text);
-          const res = await action(localUser, contentType, text, localId);
-          if (res) {
-            setContentType('');
-            setText('');
-            setHasError({ type: false, text: false });
-
-            setMessage('Fragment posted successfully');
-            await wait();
-            setMessage('');
-          }
+          res = await action(localUser, contentType, text, localId);
         } catch (error) {
           setHasError({ type: false, text: true });
           setErrorMessage('Invalid syntax input');
         }
-      } else {
-        const res = await action(localUser, contentType, text, localId);
-        if (res) {
-          setContentType('');
-          setText('');
-          setHasError({ type: false, text: false });
-
-          setMessage('Fragment posted successfully');
-          await wait();
-          setMessage('');
-        }
       }
+      res = await action(localUser, contentType, text, localId);
+
+      if (res) {
+        //setContentType('select your content type');
+        setText('');
+        setHasError({ type: false, text: false });
+
+        setMessage('Fragment posted successfully');
+        await wait();
+        setMessage('');
+      }
+      //}
     }
   };
 
@@ -76,7 +69,7 @@ const EntryForm = ({ user, action }) => {
         <option value="">select your content type</option>
         <option value="text/plain">text/plain</option>
         <option value="text/markdown">text/markdown</option>
-        <option value="text/plain; charset=utf-8">text/plain; charset=utf-8</option>
+        {/* <option value="text/plain; charset=utf-8">text/plain; charset=utf-8</option> */}
         <option value="application/json">application/json</option>
       </SelectField>
       {contentType === 'text/plain' && (
