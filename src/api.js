@@ -48,7 +48,7 @@ export async function getExpandedFragments(user) {
 }
 // GET /fragments/:id
 // https://github.com/humphd/cloud-computing-for-programmers-summer-2022/blob/main/assignments/README.md#45-get-fragmentsid
-export async function getFragmentDataByID(user, id) {
+export async function getFragmentDataByID(user, id, ext = '') {
   console.log('Requesting fragment data by id...');
   console.log(id);
   if (id.id) {
@@ -57,7 +57,7 @@ export async function getFragmentDataByID(user, id) {
   }
 
   try {
-    const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {
+    const res = await fetch(`${apiUrl}/v1/fragments/${id}${ext}`, {
       // Generate headers with the proper Authorization bearer token to pass
       headers: user.authorizationHeaders(),
     });
@@ -73,7 +73,12 @@ export async function getFragmentDataByID(user, id) {
       data = await res.json();
       //data = data.fragments;
       data = JSON.stringify(data);
+      console.log('Got fragment data', { data });
+    } else if (type.startsWith('image/')) {
+      data = await res.blob();
+      console.log('Got fragment image data');
     }
+
     return data;
   } catch (err) {
     console.error('Unable to call GET /v1/fragments/:id', { err });

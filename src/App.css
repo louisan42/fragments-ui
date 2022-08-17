@@ -92,10 +92,6 @@ button:hover {
 }
 
 .App-buttons {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content:space-around;
   margin-top: 10px;
 }
 
